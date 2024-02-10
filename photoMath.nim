@@ -8,6 +8,10 @@ proc exposureValue*(scene_lux: float, iso: float): float {.noSideEffect.} =
   let c: float = 250
   return log2(scene_lux * iso / c)
 
+proc sceneLux*(ev: float, iso: float): float {.noSideEffect.} =
+  let c: float = 250
+  return (pow(2,ev) * c) / iso
+
 proc exposureTimeFromEV*(ev: float, fstop: float, iso: float): float {.noSideEffect.} =
   return pow(fstop, 2) /  pow(2, ev) / (iso / 100)
 

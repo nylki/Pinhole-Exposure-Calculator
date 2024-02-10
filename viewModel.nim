@@ -5,11 +5,17 @@ import photoMath
 const sqrt2: float32 = sqrt(float32(2))
 const isoValues: seq[float] = @[100, 200, 400, 800, 1600]
 
+type
+  LightUnit* = enum
+    ev = "EV"
+    lux = "Lux"
+
 # 1. By not marking iso, sceneLux, fstop with a *, we make these fields private
 type ViewModel* = ref object
     iso: float = 100
     ev: float = 1
     fstop: float = sqrt2 # ~1.4
+    selectedLightUnitIndex: int
 
 
 proc newViewModel*(): ViewModel = ViewModel()
@@ -24,8 +30,14 @@ proc setISO*(model: ViewModel, iso: float) =
 proc setEv*(model: ViewModel, ev: float) =
   model.ev = ev
 
+proc setLux*(model: ViewModel, lux: float) =
+  model.ev = exposureValue(lux, model.iso)
+
 proc setFstop*(model: ViewModel, fstop: float) =
   model.fstop = fstop
+
+proc setSelectedLightUnitIndex*(model: ViewModel, index: int) =
+  model.selectedLightUnitIndex = index
 
 
 
@@ -36,8 +48,20 @@ proc iso*(model: ViewModel): float =
 proc ev*(model: ViewModel): float =
   model.ev
 
+proc lux*(model: ViewModel): float =
+  sceneLux(model.ev, model.iso)
+
 proc fstop*(model: ViewModel): float =
   model.fstop
+
+proc availableLightUnits*(model: ViewModel): seq[LightUnit] =
+  @[LightUnit.ev, LightUnit.lux]
+
+proc selectedLightUnitIndex*(model: ViewModel): int =
+  model.selectedLightUnitIndex
+
+proc selectedLightUnit*(model: ViewModel): LightUnit =
+  model.availableLightUnits[model.selectedLightUnitIndex]
 
 proc exposureTime*(model: ViewModel): float =
   ## exposure time in seconds. calculation is based on iso, EV and f-stop.
