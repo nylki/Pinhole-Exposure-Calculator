@@ -1,6 +1,6 @@
 import std/math
 import std/strformat
-import photoMath
+import ../photoMath
 
 const sqrt2: float32 = sqrt(float32(2))
 const isoValues: seq[float] = @[100, 200, 400, 800, 1600]
@@ -13,14 +13,15 @@ type
 # 1. By not marking iso, sceneLux, fstop with a *, we make these fields private
 type ViewModel* = ref object
     iso: float = 100
-    ev: float = 1
-    fstop: float = sqrt2 # ~1.4
+    ev: float = 0
+    fstop: float = 1
     selectedLightUnitIndex: int
 
 
 proc newViewModel*(): ViewModel = ViewModel()
 
 # Setters
+# ------------------------------------------------------
 
 # 2. However the setters and getters are exposed with a *
 # That way the dataflow can be controlled (all changes have to go through the setters)
@@ -40,8 +41,9 @@ proc setSelectedLightUnitIndex*(model: ViewModel, index: int) =
   model.selectedLightUnitIndex = index
 
 
-
 # Getters
+# ------------------------------------------------------
+
 proc iso*(model: ViewModel): float =
   model.iso
 
@@ -79,3 +81,6 @@ proc exposureTimeHumanReadable*(model: ViewModel): string =
     of 60..60*60: fmt"{seconds / 60: .1f} minutes"
     of 60*60..24*60*60: fmt"{seconds / 60 / 60: .1f} hours"
     else: fmt"{seconds / 60 / 60 / 24: .1f} days"
+
+proc exposureValueDescriptionOutdoor*(model: ViewModel): string =
+  exposureValueDescriptionOutdoor(model.ev)

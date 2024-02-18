@@ -1,18 +1,22 @@
-import std/strformat
+
 import owlkettle
-import owlkettle/adw
-import owlkettle/dataentries
+import owlkettle/[adw, dataentries, playground]
+
+import std/strformat
 import std/math
 import std/sequtils
 import std/sugar
 import std/options
 
-import viewModel
+
+import model/view_model
+import view/app_header_bar
 
 let sqrt2: float32 = sqrt(float32(2))
 let isoValues: seq[float] = @[100, 200, 400, 800, 1600]
 
-const APP_NAME = "Pinhole Calculator"
+# TODO: reprocity failure (Schwartzschild-Effekt)
+# https://en.wikipedia.org/wiki/Reciprocity_(photography)#Simple_model_for_t_%3E_1_second
 
 
 # https://en.wikipedia.org/wiki/Exposure_value#Tabulated_exposure_values
@@ -35,13 +39,13 @@ viewable App:
 method view(app: AppState): Widget =
   result = gui:
     Window:
-      title = APP_NAME
-      defaultSize = (300, 250)
-
+      defaultSize = (400, 300)
+      AppHeaderBar(model = app.model){.addTitlebar.}
       Box(orient = OrientY, margin = 12, spacing = 6):
         Box(style = [BoxCard]){.expand: false.}:
-          Box(orient = OrientX, margin = 12, spacing = 12){.expand: false.}:
+          Box(orient = OrientX, margin = 12, spacing = 12):
             Label(text = "F-Stop"){.expand: false.}
+            Separator(style = StyleClass("spacer"))
             NumberEntry():
               value = app.model.fstop
               proc changed(newValue: float) = app.model.setFstop(newValue)
@@ -49,6 +53,7 @@ method view(app: AppState): Widget =
         Box(orient = OrientY, style = [BoxCard], spacing = 6){.expand: false.}:
           Box(orient = OrientX, spacing = 6, margin = 12):
             Label(text = "ISO"){.expand: false.}
+            Separator(style = StyleClass("spacer"))
             SpinButton:
               value = app.model.iso
               digits = 0
@@ -61,7 +66,7 @@ method view(app: AppState): Widget =
         # When selected Lux we convert lux->EV when changing values into the model
         # and EV->Lux when displaying them (i.e. in the NumberEntry)
         Box(orient = OrientY, style = [BoxCard], spacing = 6){.expand: false.}:
-          Box(orient = OrientX, spacing = 6, margin = 12):
+          Box(orient = OrientX, style = [BoxLinked], margin = 12):
             DropDown{.expand: false.}:
               # map the enum values to their associated strings via $
               items = app.model.availableLightUnits.map(unit => $unit)
@@ -90,10 +95,12 @@ method view(app: AppState): Widget =
             marks = exposureValueMarks
             value = app.model.ev
             proc valueChanged(newValue: float) = app.model.setEv(newValue)
+          
+          Label(margin = 10):
+            text = fmt"{app.model.exposureValueDescriptionOutdoor}"
 
 
-        Label():
-          margin = 10
+        Label(margin = 10):
           useMarkup = true
           text = fmt"<span font='18'>{app.model.exposureTimeHumanReadable}</span>"
           tooltip = fmt"{app.model.exposureTime} seconds"
