@@ -25,17 +25,14 @@ method view(view: AppHeaderBarState): Widget =
                 text = "About Pinhole Calculator"
                 proc clicked() =
                   discard view.open: gui:
-                    AboutDialog:
-                      programName = "Pinhole Calculator"
-                      logo = "applications-graphics"
-                      version = fmt"libadwaita version {AdwVersion}"
-                      credits = @{
-                        "Code": @[
-                          "Tom Brewe"
-                        ],
-                        "Art": @[
-                          "Tom Brewe"
-                        ]
-                      }
+                    AboutWindow:
+                      applicationName = "Pinhole Calculator"
+                      developerName = "nylki (Tom Brewe)"
+                      version = "0.0.1"
+                      website = "https://github.com/nylki/PinholeCalculator"
+                      copyright = "Tom Brewe"
+                      license = "MIT (TODO: full text)"
+
+
 
 export AppHeaderBar
