@@ -1,6 +1,6 @@
 # Pinhole Calculator
 
-An exposure time calculator for (pinhole) cameras written in [nim](https://nim-lang.org/).
+An exposure time calculator for (pinhole) cameras written in [nim](https://nim-lang.org/) using the declarative adwaita UI framework [owlkettle](https://can-lehmann.github.io/owlkettle/README.html).
 
 
 ## Installation
@@ -18,7 +18,7 @@ or:
 apt install nim nimble
 ```
 
-Then install `owlkettle` (the declarative adwaita UI framework) via nimble:
+Then install `owlkettle` via nimble:
 
 ```.sh
 nimble install owlkettle
