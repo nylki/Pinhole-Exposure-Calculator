@@ -97,6 +97,7 @@ method view(app: AppState): Widget =
             proc valueChanged(newValue: float) = app.model.setEv(newValue)
           
           Label(margin = 10):
+            wrap = true
             text = fmt"{app.model.exposureValueDescriptionOutdoor}"
 
 
