@@ -13,10 +13,11 @@ dnf install nim nimble
 
 or:
 
-
 ```.sh
 apt install nim nimble
 ```
+
+-------------------------
 
 Then install `owlkettle` via nimble:
 
