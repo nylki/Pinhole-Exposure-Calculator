@@ -7,24 +7,24 @@ An exposure time calculator for (pinhole) cameras written in [nim](https://nim-l
 
 ## Installation
 
-First install `nim` and its package manager `nimble`:
+First you need `nim`, its package manager `nimble` as well as the `gtk` and `adwaita` dependencies:
 
 ```.sh
-dnf install nim nimble
+dnf install nim nimble gtk4-devel libadwaita-devel
 ```
 
 or:
 
 ```.sh
-apt install nim nimble
+apt install nim nimble libgtk-4-dev libadwaita-1-dev
 ```
 
 -------------------------
 
-Then install `owlkettle` via nimble:
+Then install `owlkettle` via nimble ([more details in the owlkettle repo](https://can-lehmann.github.io/owlkettle/docs/installation.html)):
 
 ```.sh
-nimble install owlkettle
+nimble install owlkettle@#head
 ```
 
 -------------------------
