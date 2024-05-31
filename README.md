@@ -2,7 +2,8 @@
 
 An exposure time calculator for (pinhole) cameras written in [nim](https://nim-lang.org/) using the declarative adwaita UI framework [owlkettle](https://can-lehmann.github.io/owlkettle/README.html).
 
-![PinholeExposureCalculator Bildschirmfoto vom 2024-05-31 15-14-30](https://github.com/nylki/Pinhole-Exposure-Calculator/assets/1710598/933d8f92-73fc-48fc-a010-d1153a10010f)
+![PinholeExposureCalculator Bildschirmfoto vom 2024-05-31 15-26-59](https://github.com/nylki/Pinhole-Exposure-Calculator/assets/1710598/14acc4fc-8e0d-41fb-b633-057d0e8e2c8e)
+
 
 
 ## Installation
