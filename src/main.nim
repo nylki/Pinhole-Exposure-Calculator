@@ -39,11 +39,11 @@ viewable App:
 method view(app: AppState): Widget =
   result = gui:
     Window:
-      defaultSize = (300, 400)
+      defaultSize = (360, 400)
       AppHeaderBar(model = app.model){.addTitlebar.}
       Box(orient = OrientY, margin = 12, spacing = 6):
         Box(style = [BoxCard]){.expand: false.}:
-          Box(orient = OrientX, margin = 12, spacing = 45):
+          Box(orient = OrientX, margin = 12, spacing = 80):
             Label(text = "F-Stop"){.expand: false.}
             Separator(style = StyleClass("spacer"))
             NumberEntry():
@@ -51,7 +51,7 @@ method view(app: AppState): Widget =
               proc changed(newValue: float) = app.model.setFstop(newValue)
         
         Box(orient = OrientY, style = [BoxCard], spacing = 6){.expand: false.}:
-          Box(orient = OrientX, spacing = 30, margin = 12):
+          Box(orient = OrientX, spacing = 50, margin = 12):
             Label(text = "ISO"){.expand: false.}
             Separator(style = StyleClass("spacer"))
             SpinButton:

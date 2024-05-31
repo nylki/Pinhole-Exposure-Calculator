@@ -3,7 +3,7 @@ import ../model/view_model
 import owlkettle/[adw]
 import std/strformat
 
-const APP_NAME = "Pinhole Calculator"
+const APP_NAME = "Pinhole Exposure Calculator"
 
 viewable AppHeaderBar:
   model: ViewModel
@@ -22,17 +22,16 @@ method view(view: AppHeaderBarState): Widget =
               # FIXME: when using a regular button the popover stays after click
               ModelButton:
                 style = [ButtonFlat]
-                text = "About Pinhole Calculator"
+                text = "About Pinhole Exposure Calculator"
                 proc clicked() =
                   discard view.open: gui:
                     AboutWindow:
-                      applicationName = "Pinhole Calculator"
+                      applicationName = "Pinhole Exposure Calculator"
                       developerName = "nylki (Tom Brewe)"
                       version = "0.0.1"
                       website = "https://github.com/nylki/PinholeCalculator"
                       copyright = "Tom Brewe"
-                      license = "MIT (TODO: full text)"
-
+                      licenseType = LicenseMIT_X11
 
 
 export AppHeaderBar
