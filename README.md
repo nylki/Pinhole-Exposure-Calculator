@@ -1,4 +1,4 @@
-# Pinhole Calculator
+# Pinhole Exposure Calculator
 
 An exposure time calculator for (pinhole) cameras written in [nim](https://nim-lang.org/) using the declarative adwaita UI framework [owlkettle](https://can-lehmann.github.io/owlkettle/README.html).
 
