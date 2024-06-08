@@ -39,15 +39,16 @@ viewable App:
 method view(app: AppState): Widget =
   result = gui:
     Window:
-      defaultSize = (360, 400)
+      defaultSize = (400, 400)
       AppHeaderBar(model = app.model){.addTitlebar.}
       Box(orient = OrientY, margin = 12, spacing = 6):
         Box(style = [BoxCard]){.expand: false.}:
-          Box(orient = OrientX, margin = 12, spacing = 80):
-            Label(text = "F-Stop"){.expand: false.}
-            Separator(style = StyleClass("spacer"))
-            NumberEntry():
+          ActionRow:
+            title = "F-Stop"
+            NumberEntry{.addSuffix.}:
               value = app.model.fstop
+              xAlign = 1.0
+              maxWidth = 5
               proc changed(newValue: float) = app.model.setFstop(newValue)
         
         Box(orient = OrientY, style = [BoxCard], spacing = 6){.expand: false.}:
@@ -93,13 +94,41 @@ method view(app: AppState): Widget =
             pageSize = 4
             showFillLevel = true
             marks = exposureValueMarks
-            value = app.model.ev
+            value = app.model.ev                                    
             proc valueChanged(newValue: float) = app.model.setEv(newValue)
           
           Label(margin = 10):
             wrap = true
             text = fmt"{app.model.exposureValueDescriptionOutdoor}"
 
+        Box(orient = OrientY, style = [BoxCard], spacing = 6){.expand: false.}:
+          ExpanderRow:
+            tooltip = "Toggle to set a correction factor for the reciprocity failure of analog film (Schwarzschild-Effect)."
+            title = "Reciprocity correction"
+            expanded = app.model.isReciprocityCorrectionSettingsExpanded
+            enableExpansion = app.model.isReciprocityCorrectionEnabled
+            subtitle =
+              case app.model.reciprocityCorrectionState:
+                of disabled, enabledExpandedRow: ""
+                of enabledCollapsedRow: fmt"factor: {app.model.reciprocityCorrectionFactor}"
+            proc expand(newExpandState: bool) =
+                if newExpandState:
+                  app.model.setApplyReciprocityCorrection(ReciprocityCorrectionState.enabledExpandedRow)
+                else:
+                  app.model.setApplyReciprocityCorrection(ReciprocityCorrectionState.enabledCollapsedRow)
+            Switch{.addAction.}:
+              state = app.model.isReciprocityCorrectionEnabled
+              proc changed(state: bool) =
+                if state:
+                  app.model.setApplyReciprocityCorrection(ReciprocityCorrectionState.enabledExpandedRow)
+                else:
+                  app.model.setApplyReciprocityCorrection(ReciprocityCorrectionState.disabled)
+            ActionRow {.addRow.}:
+              title = "correction factor"
+              subtitle = fmt"corrected time = time^factor"
+              NumberEntry(maxWidth = 4){.addSuffix.}:
+                value = app.model.reciprocityCorrectionFactor
+                proc changed(newValue: float) = app.model.setReciprocityCorrectionFactor(newValue)
 
         Label(margin = 20):
           useMarkup = true
