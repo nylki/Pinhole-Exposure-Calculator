@@ -10,12 +10,29 @@ type
     ev = "EV"
     lux = "Lux"
 
+type ReciprocityCorrectionState* = enum
+  disabled
+  enabledExpandedRow
+  enabledCollapsedRow
+
+proc isEnabled*(state: ReciprocityCorrectionState): bool =
+  case state:
+    of enabledCollapsedRow, enabledExpandedRow: true
+    else: false
+
+proc isExpanded*(state: ReciprocityCorrectionState): bool =
+  case state:
+    of enabledExpandedRow: true
+    of disabled, enabledCollapsedRow: false
+
 # 1. By not marking iso, sceneLux, fstop with a *, we make these fields private
 type ViewModel* = ref object
     iso: float = 100
     ev: float = 0
-    fstop: float = 1
+    fstop: float = 256
     selectedLightUnitIndex: int
+    reciprocityCorrectionFactor: float = 1
+    applyReciprocityCorrection: ReciprocityCorrectionState
 
 
 proc newViewModel*(): ViewModel = ViewModel()
@@ -39,6 +56,12 @@ proc setFstop*(model: ViewModel, fstop: float) =
 
 proc setSelectedLightUnitIndex*(model: ViewModel, index: int) =
   model.selectedLightUnitIndex = index
+
+proc setReciprocityCorrectionFactor*(model: ViewModel, factor: float) =
+  model.reciprocityCorrectionFactor = factor
+
+proc setApplyReciprocityCorrection*(model: ViewModel, value: ReciprocityCorrectionState) =
+  model.applyReciprocityCorrection = value
 
 
 # Getters
@@ -70,7 +93,10 @@ proc exposureTime*(model: ViewModel): float =
   exposureTimeFromEV(model.ev, model.fstop, model.iso)
 
 proc exposureTimeHumanReadable*(model: ViewModel): string =
-  let seconds = exposureTimeFromEV(model.ev, model.fstop, model.iso)
+  var seconds = exposureTimeFromEV(model.ev, model.fstop, model.iso)
+  if isEnabled(model.applyReciprocityCorrection):
+    seconds = pow(seconds, model.reciprocityCorrectionFactor)
+    
   if seconds < 0.01:
     return fmt"{seconds: .4f} seconds"
   if seconds < 0.1:
@@ -84,3 +110,15 @@ proc exposureTimeHumanReadable*(model: ViewModel): string =
 
 proc exposureValueDescriptionOutdoor*(model: ViewModel): string =
   exposureValueDescriptionOutdoor(model.ev)
+
+proc reciprocityCorrectionFactor*(model: ViewModel): float =
+  model.reciprocityCorrectionFactor
+
+proc reciprocityCorrectionState*(model: ViewModel): ReciprocityCorrectionState =
+  model.applyReciprocityCorrection
+
+proc isReciprocityCorrectionEnabled*(model: ViewModel): bool =
+  isEnabled(model.applyReciprocityCorrection)
+
+proc isReciprocityCorrectionSettingsExpanded*(model: ViewModel): bool =
+  isExpanded(model.applyReciprocityCorrection)
